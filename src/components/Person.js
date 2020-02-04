@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 // const Person = (props) => (
 //     <div>
@@ -6,19 +6,22 @@ import React from 'react'
 //     </div>
 // )
 
-// export default Person 
+// export default Person
 
-class Person extends React.Component{
-    render(){
+class Person extends React.Component {
+  render() {
+    //const {name, age}=this.props; props의 name, age 할당 
 
-        //const {name, age}=this.props; props의 name, age 할당
-
-        return(
-            <div>
-                <h1>props : {this.props.name}   age : {this.props.age}</h1>
-            </div>
-        )
-    }
+    return (
+      <div>
+        <h1>
+          props : {this.props.name} age : {this.props.age}
+        </h1>
+        <h2>{this.props.children}</h2>
+        <h3>{this.props.myfun}</h3>
+      </div>
+    );
+  }
 }
 
 export default Person;

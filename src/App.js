@@ -70,10 +70,10 @@ class App extends React.Component {
   render(){
 
     return(
-      <div className="App">
+      <div className="Header">
         <Display value={this.state.number}></Display>
-        <Button clickHandler={()=>this.onClickHandler(1)}>버튼 컴포넌트 증가</Button>
-        <Button clickHandler={()=>this.onClickHandler(-1)}>버튼 컴포넌트 감소</Button>
+        <Button className="Btn" clickHandler={()=>this.onClickHandler(1)}>버튼 컴포넌트 증가</Button>
+        <Button className="Btn" clickHandler={()=>this.onClickHandler(-1)}>버튼 컴포넌트 감소</Button>
 
         <button onClick={()=>this.onClickHandler(1)}>증가</button>
         <button onClick={()=>this.onClickHandler(-1)}>감소</button>

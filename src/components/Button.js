@@ -1,8 +1,9 @@
 import React from 'react';
 
-const Button=({children, clickHandler})=>
+//CSS 반영 : className=
+const Button=({children, clickHandler, className})=>
     <div>
-        <button onClick={clickHandler}>{children}</button>
+        <button className={className} onClick={clickHandler}>{children}</button>
     </div>
 
 export default Button;

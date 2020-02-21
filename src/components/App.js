@@ -1,16 +1,18 @@
-import React from 'react';
-import '../App.css';
+import React from "react";
+import Header from "./Header";
+import Aladin from "../Screens/Aladin";
+import LionKing from "../Screens/LionKing";
+import Routes from "./Routes";
 
-class App extends React.Component{
-  render(){
-    return(
+function App() {
+  return (
+    <div>
+      Movie Theaters
+      <Header />
      
-      <div>
-        {this.props.children}
-      </div>
-
-    )
-  }
+      <Routes></Routes>
+    </div>
+  );
 }
 
 export default App;

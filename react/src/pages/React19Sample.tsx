@@ -8,10 +8,10 @@ import React, {
 } from 'react';
 import { useFormStatus } from 'react-dom';
 
-const postUser = () => {
-  return new Promise((resolve) => {
+const updateDb = (data: string) => {
+  return new Promise<string>((resolve) => {
     setTimeout(() => {
-      resolve(true);
+      resolve(data);
     }, 1000);
   });
 };
@@ -23,7 +23,7 @@ const fetchJsonPlaceholderList = async ({ pageParam = 1 }) => {
   return await res.json();
 };
 
-export default function React19() {
+export default function React19Sample() {
   return (
     <div
       style={{
@@ -32,21 +32,27 @@ export default function React19() {
         gap: '10px',
       }}
     >
-      <div>
-        <p>useTransition</p>
+      <div className="border border-black">
+        <p className="font-bold text-xl">useTransition</p>
         <UseTransition />
       </div>
-      <div>
-        <p>useActionState</p>
+      <div className="border border-black">
+        <p className="font-bold text-xl">useActionState</p>
         <UseActionState />
       </div>
-      <div>
-        <p>useOptimistic</p>
+      <div className="border border-black">
+        <p className="font-bold text-xl">useOptimistic</p>
         <UseOptimistic />
       </div>
-      <div>
-        <p>use: promise</p>
+      <div className="border border-black">
+        <p className="font-bold text-xl">use: promise</p>
         {/* FIXME: 무한루프 수정 */}
+        <Suspense fallback={'loading data...'}>
+          <UseWithPromise />
+        </Suspense>
+      </div>
+      <div className="border border-black">
+        <p className="font-bold text-xl">use: context</p>
         <Suspense fallback={'loading data...'}>
           <UseWithPromise />
         </Suspense>
@@ -56,15 +62,26 @@ export default function React19() {
 }
 
 /**
- * Actions
- * useActionState: form 처리 관련 상태를 확인할 수 있음
+ * useActionState: 비동기 작업을 수행하고, 상태를 관리하는 훅
+ * params
+ * fn: form이 submit될 시 실행될 비동기 작업, 에러 혹은
+ *  - previousState: 이전 상태
+ *  - formData: form 데이터
+ *  - permalink?: 이 form이 적용할 페이지의 url
+ * initialState: 초기 상태
  *
+ * return
+ * error: 에러 메시지
+ * submitAction: form action
+ * isPending: 작업이 진행중인지 여부
+ *
+ * TODO: 예제 만들기
  */
 const UseActionState = () => {
   const [error, submitAction, isPending] = useActionState(
     async (previousState, formData) => {
       console.log('###', previousState, formData);
-      const error = await postUser();
+      const error = await updateDb('result');
       if (error) {
         return error;
       }
@@ -96,16 +113,21 @@ function PendingText() {
 
 /**
  * useOptimistic
+ * - optimistic update 기능 hook (응답을 받기 전에 예상되는 결과값을 표시)
+ * - 즉각적인 업데이트를 통해 사용자 경험을 향상시킬 수 있음
+ * - TODO: 사용법 정리
  */
 const UseOptimistic = () => {
   const [currentName, setCurrentName] = useState('');
+  const [result, setResult] = useState('');
   const [optimisticName, setOptimisticName] = useOptimistic(currentName);
 
   const submitAction = async (formData) => {
     const newName = formData.get('name');
     setOptimisticName(newName);
-    await postUser();
+    const res = await updateDb(newName);
     setCurrentName(Math.random().toString());
+    setResult(res);
   };
 
   return (
@@ -116,6 +138,7 @@ const UseOptimistic = () => {
         <label>Change Name:</label>
         <input type="text" name="name" />
       </p>
+      <p>result:{result}</p>
     </form>
   );
 };
@@ -139,17 +162,15 @@ const UseWithContext = () => {};
  * useTransition이 비동기 콜백을 지원, 비동기 호출 상태를 지원함 (isPending)
  */
 function UseTransition({}) {
+  const [result, setResult] = useState('');
   const [name, setName] = useState('');
-  const [error, setError] = useState(null);
   const [isPending, startTransition] = useTransition();
 
   const handleSubmit = () => {
+    // useTransition을 사용한 비동기 pending state 처리
     startTransition(async () => {
-      const error = await postUser();
-      if (error) {
-        setError(error);
-        return;
-      }
+      const res = await updateDb(name);
+      setResult(res);
     });
   };
 
@@ -160,7 +181,7 @@ function UseTransition({}) {
       <button onClick={handleSubmit} disabled={isPending}>
         Update
       </button>
-      {error && <p>{error}</p>}
+      <p>result:{result}</p>
     </div>
   );
 }

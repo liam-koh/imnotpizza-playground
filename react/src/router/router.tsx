@@ -1,5 +1,5 @@
 
-import React19Sample from '@/pages/React19Sample2';
+import React19Sample from '@/pages/React19Sample';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
 export default function AppRouter() {

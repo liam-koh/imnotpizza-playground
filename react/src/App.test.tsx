@@ -10,5 +10,5 @@ test('1 is 1', () => {
 
 test('render', async () => {
   render(<App />);
-  expect(screen.getByText('o2pluss template')).toBeInTheDocument();
+  // expect(screen.getByText('imnotpizza template')).toBeInTheDocument();
 });

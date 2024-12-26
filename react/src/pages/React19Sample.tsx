@@ -54,9 +54,9 @@ export default function React19Sample() {
       </div>
       <div className="border border-black">
         <p className="font-bold text-xl">use: context</p>
-        <Suspense fallback={'loading data...'}>
+        <CounterContextProvider>
           <UseWithContext />
-        </Suspense>
+        </CounterContextProvider>
       </div>
     </div>
   );
@@ -81,7 +81,6 @@ export default function React19Sample() {
 const UseActionState = () => {
   const [error, submitAction, isPending] = useActionState(
     async (previousState, formData) => {
-      console.log('###', previousState, formData);
       const error = await updateDb('result');
       if (error) {
         return error;
@@ -132,14 +131,32 @@ const UseWithPromise = () => {
   const res = use(fetchPromise);
   return (
     <div>
-      <div>
-        {res?.map((post) => <div key={post.id}>{post.title}</div>)}
-      </div>
+      <div>{res?.map((post) => <div key={post.id}>{post.title}</div>)}</div>
     </div>
   );
 };
 
-const UseWithContext = () => {};
+const CounterContext = React.createContext({ count: 0, setCount: () => {} });
+
+const CounterContextProvider = ({ children }) => {
+  const [count, setCount] = useState(0);
+
+  return (
+    <CounterContext.Provider value={{ count, setCount }}>
+      {children}
+    </CounterContext.Provider>
+  );
+};
+
+const UseWithContext = () => {
+  const { count, setCount } = use(CounterContext);
+  return (
+    <div>
+      <p>count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>add</button>
+    </div>
+  );
+};
 
 /**
  * useTransition이 비동기 콜백을 지원, 비동기 호출 상태를 지원함 (isPending)

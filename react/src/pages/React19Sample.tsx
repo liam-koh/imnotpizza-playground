@@ -1,3 +1,4 @@
+import OptimisticExample from '@/components/OptimisticExample';
 import React, {
   Suspense,
   use,
@@ -114,33 +115,12 @@ function PendingText() {
 /**
  * useOptimistic
  * - optimistic update 기능 hook (응답을 받기 전에 예상되는 결과값을 표시)
+ * - 기존의 react에서 optimistic update는 주로 react-query를 사용하여 구현하였으나, 자체적으로 API를 제공하여 사용할수 있을듯
  * - 즉각적인 업데이트를 통해 사용자 경험을 향상시킬 수 있음
  * - TODO: 사용법 정리
  */
 const UseOptimistic = () => {
-  const [currentName, setCurrentName] = useState('');
-  const [result, setResult] = useState('');
-  const [optimisticName, setOptimisticName] = useOptimistic(currentName);
-
-  const submitAction = async (formData) => {
-    const newName = formData.get('name');
-    setOptimisticName(newName);
-    const res = await updateDb(newName);
-    setCurrentName(Math.random().toString());
-    setResult(res);
-  };
-
-  return (
-    <form action={submitAction}>
-      <p>Your current name: {optimisticName}</p>
-      <p>Your name is: {currentName}</p>
-      <p>
-        <label>Change Name:</label>
-        <input type="text" name="name" />
-      </p>
-      <p>result:{result}</p>
-    </form>
-  );
+  return <OptimisticExample />;
 };
 
 const fetchPromise = fetchJsonPlaceholderList({ pageParam: 1 });
@@ -160,6 +140,9 @@ const UseWithContext = () => {};
 
 /**
  * useTransition이 비동기 콜백을 지원, 비동기 호출 상태를 지원함 (isPending)
+ * - 원래 useTransition는 비용이 많이 들어가는 작업을 처리할 때 동시성 모드를 사용하여 성능을 향상시키는데 사용됨
+ * - 기존에는 비동기작업은 지원하지 않았으나, 19버전에서 비동기 작업을 지원하게 됨
+ * - api 상태 변경에 매우 유용할 것으로 생각됨
  */
 function UseTransition({}) {
   const [result, setResult] = useState('');

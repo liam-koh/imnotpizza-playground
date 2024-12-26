@@ -54,6 +54,7 @@ export default function OptimisticExample() {
 
   return (
     <>
+      <p>pending: {pending ? 'true' : 'false'}</p>
       {optimisticMessages.map((message, index) => (
         <div key={index}>
           {message.text}

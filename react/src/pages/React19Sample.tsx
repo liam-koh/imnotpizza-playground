@@ -55,7 +55,7 @@ export default function React19Sample() {
       <div className="border border-black">
         <p className="font-bold text-xl">use: context</p>
         <Suspense fallback={'loading data...'}>
-          <UseWithPromise />
+          <UseWithContext />
         </Suspense>
       </div>
     </div>
@@ -130,9 +130,12 @@ const fetchPromise = fetchJsonPlaceholderList({ pageParam: 1 });
  */
 const UseWithPromise = () => {
   const res = use(fetchPromise);
-
   return (
-    <div>{res.data?.map((post) => <div key={post.id}>{post.title}</div>)}</div>
+    <div>
+      <div>
+        {res?.map((post) => <div key={post.id}>{post.title}</div>)}
+      </div>
+    </div>
   );
 };
 

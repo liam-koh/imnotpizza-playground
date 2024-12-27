@@ -1,10 +1,12 @@
 import OptimisticExample from '@/components/OptimisticExample';
+import { random } from 'lodash';
 import React, {
   forwardRef,
   Suspense,
   use,
   useActionState,
   useEffect,
+  useMemo,
   useOptimistic,
   useState,
   useTransition,
@@ -62,6 +64,7 @@ export default function React19Sample() {
         </CounterContextProvider>
       </div>
       <LinkPriorityExample />
+      <MetadataExample/>
     </div>
   );
 }
@@ -252,3 +255,31 @@ const LinkPriorityExample = () => {
 
   return <div></div>;
 };
+
+/**
+ * Metadata 관련 스크립트의 속성을 동적으로 지정가능한 기능
+ * 기존 react(SPA기준)의 경우 useEffect에서 직접 조작하거나 react-helmet을 사용하여 변경하였으나, react 스타일로 수정할수 있도록 개선됨
+ * 다음과 같이 사용할 경우, 자동으로 document head 쪽으로 호이스트되어 선언됨
+ */
+
+
+function MetadataExample() {
+  const post = useMemo(() => {
+    // random
+    return {
+      title: 'My Post' + random(1, 10),
+      keywords: 'react, react19' + random(1, 10),
+    };
+  }, []);
+
+  return (
+    <article>
+      <h1>{post.title}</h1>
+      <title>{post.title}</title>
+      <meta name="author" content="Josh" />
+      <link rel="author" href="https://twitter.com/joshcstory/" />
+      <meta name="keywords" content={post.keywords} />
+      <p>Eee equals em-see-squared...</p>
+    </article>
+  );
+}

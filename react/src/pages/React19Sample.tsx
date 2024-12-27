@@ -1,13 +1,16 @@
 import OptimisticExample from '@/components/OptimisticExample';
 import React, {
+  forwardRef,
   Suspense,
   use,
   useActionState,
+  useEffect,
   useOptimistic,
   useState,
   useTransition,
 } from 'react';
 import { useFormStatus } from 'react-dom';
+import { preconnect, preload, preinit } from 'react-dom';
 
 const updateDb = (data: string) => {
   return new Promise<string>((resolve) => {
@@ -58,6 +61,7 @@ export default function React19Sample() {
           <UseWithContext />
         </CounterContextProvider>
       </div>
+      <LinkPriorityExample />
     </div>
   );
 }
@@ -188,3 +192,61 @@ function UseTransition({}) {
     </div>
   );
 }
+
+/**
+ * 기존에는 ref를 props로 전달하려면 forwardRef로 감싸 처리해야했으나,
+ * forwardRef 없이도 전달할수 있도록 변경되었다.
+ * 그리하여 forwardRef는 더이상 필요하지 않게 되었는데 아직은 deprecated 되지는 않은 상태이다.
+ */
+// as is
+const RefExampleAsis = forwardRef(({ placeholder }, ref) => {
+  return <input placeholder={placeholder} ref={ref} />;
+});
+
+// to be (React 19)
+function RefExampleTobe({ placeholder, ref }) {
+  return <input placeholder={placeholder} ref={ref} />;
+}
+
+// preinit('https://.../path/to/some/script.js', {as: 'script' }) // loads and executes this script eagerly
+// preinit
+// preload('https://.../path/to/font.woff', { as: 'font' }) // preloads this font
+// preconnect('https://...') // when you will request something but aren't sure what
+const LinkPriorityExample = () => {
+  // 컴포넌트 로드 시 가장 먼저 스크립트 로드
+  // as; "script" | "style";
+  preinit('https://cdn.datatables.net/plug-ins/1.10.20/sorting/enum.js', {
+    as: 'script',
+  });
+
+  // 호스트에 미리 연결
+  // preconnect('https://example.com/preconnect');
+  // 리소스 중 우선순위 상위
+  // as: 리소스의 유형, 다음 중에서 선택가능
+  type PreloadAs =
+    | 'audio'
+    | 'document'
+    | 'embed'
+    | 'fetch'
+    | 'font'
+    | 'image'
+    | 'object'
+    | 'track'
+    | 'script'
+    | 'style'
+    | 'video'
+    | 'worker';
+  preload('https://example.com/preload', { as: 'document' });
+
+  useEffect(() => {
+    // add <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    // to the document
+    const script = document.createElement('script');
+    script.src =
+      'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js';
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
+
+  return <div></div>;
+};

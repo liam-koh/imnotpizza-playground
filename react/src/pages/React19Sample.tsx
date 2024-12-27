@@ -212,6 +212,8 @@ function RefExampleTobe({ placeholder, ref }) {
 // preinit
 // preload('https://.../path/to/font.woff', { as: 'font' }) // preloads this font
 // preconnect('https://...') // when you will request something but aren't sure what
+// 리소스 로드 순서 및 우선순위를 지정할 수 있음, 필요한 리소스를 먼저 로드하여 웹 성능 최적화에 이용됨
+// 하지만 react기반 프레임워크 (Next.js, Remix 등)에서 이미 지원하고 있어 사용해야 하는 상황인지 먼저 체크 필요
 const LinkPriorityExample = () => {
   // 컴포넌트 로드 시 가장 먼저 스크립트 로드
   // as; "script" | "style";
